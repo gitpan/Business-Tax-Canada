@@ -1,0 +1,25 @@
+Business-Tax-Canada version 0.01
+================================
+
+This module will allow you to calculate the Canadian GST and PST
+charges on items.  For usage information, see the module's perldoc.
+
+INSTALLATION
+
+To install this module type the following:
+
+   perl Makefile.PL
+   make
+   make test
+   make install
+
+DEPENDENCIES
+
+None
+
+COPYRIGHT AND LICENCE
+
+Copyright (C) 2004 Andy Grundman. All rights reserved.
+
+This module is free software; you can redistribute it and/or modify it
+under the same terms as Perl itself.
