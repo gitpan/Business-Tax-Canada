@@ -5,7 +5,7 @@ use warnings;
 use Carp;
 
 use vars qw/$VERSION @provinces/;
-$VERSION = '0.01';
+$VERSION = '0.02';
 @provinces = qw/ab bc mb nb nf nt ns nu on pe qc sk yt/;
 
 =head1 NAME
