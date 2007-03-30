@@ -5,7 +5,7 @@ use warnings;
 use Carp;
 
 use vars qw/$VERSION @provinces/;
-$VERSION = '0.02';
+$VERSION = '0.03';
 @provinces = qw/ab bc mb nb nf nt ns nu on pe qc sk yt/;
 
 =head1 NAME
@@ -19,12 +19,12 @@ Business::Tax::Canada - perform Canadian GST/HST/PST calculations
   my $tax = Business::Tax::Canada->new;
 
   my $price               = $tax->item(
-                                from => 'bc',
-                                to => 'bc'
+                                from  => 'ab',
+                                to    => 'ab'
                                 price => 120);
-  my $price_to_customer   = $price->full;     # 137.40
-  my $gst_charged         = $price->gst;      # 8.40
-  my $pst_charged         = $price->pst;      # 9
+  my $price_to_customer   = $price->full;     # 127.20
+  my $gst_charged         = $price->gst;      # 7.20
+  my $pst_charged         = $price->pst;      # 0
   my $net_charged         = $price->net;      # 120
   
 =cut
@@ -53,16 +53,16 @@ package Business::Tax::Canada::Price;
 
 use vars qw/%GST_RATE %PST_RATE/;
 %GST_RATE = (
-    ab => 7,    bc => 7,    mb => 7,    nb => 15,
-    nf => 15,   nt => 7,    ns => 15,   nu => 7,
-    on => 7,    pe => 7,    qc => 7,    sk => 7,
-    yt => 7,
+    ab => 6,    bc => 6,    mb => 6,    nb => 14,
+    nf => 14,   nt => 6,    ns => 14,   nu => 6,
+    on => 6,    pe => 6,    qc => 6,    sk => 6,
+    yt => 6,
 );
 
 %PST_RATE = (
-    ab => 0,    bc => 7.5,  mb => 7,    nb => 0,
+    ab => 0,    bc => 7,    mb => 7,    nb => 0,
     nf => 0,    nt => 0,    ns => 0,    nu => 0,
-    on => 8,    pe => 10,   qc => 7.5,  sk => 6,
+    on => 8,    pe => 10,   qc => 7.5,  sk => 7,
     yt => 0,
 );
 
@@ -136,22 +136,22 @@ method.
 =head1 PROVINCES AND RATES
 
 This module uses the following rates and codes obtained from
-http://www.cbsc.org/alberta/search/display.cfm?Code=1122&coll=FE_FEDSBIS_E
+http://www.cbsc.org/servlet/ContentServer?pagename=CBSC_AB/display&c=Regs&cid=1081944192301&lang=en
 
   Code  Province                GST/HST PST
-  ab    Alberta                 7%      N/A
-  bc    British Columbia        7%      7.5%
-  mb    Manitoba                7%      7%
-  nb    New Brunswick           15%     N/A
-  nf    Newfoundland & Labrador 15%     N/A
-  nt    Northwest Territories   7%      N/A
-  ns    Nova Scotia             15%     N/A
-  nu    Nunavut                 7%      N/A
-  on    Ontario                 7%      8%
-  pe    Prince Edward Island    7%      10%     *
-  qc    Quebec                  7%      7.5%    *
-  sk    Saskatchewan            7%      6%
-  yt    Yukon Territory         7%      N/A
+  ab    Alberta                 6%      N/A
+  bc    British Columbia        6%      7%
+  mb    Manitoba                6%      7%
+  nb    New Brunswick           14%     N/A
+  nf    Newfoundland & Labrador 14%     N/A
+  nt    Northwest Territories   6%      N/A
+  ns    Nova Scotia             14%     N/A
+  nu    Nunavut                 6%      N/A
+  on    Ontario                 6%      8%
+  pe    Prince Edward Island    6%      10%     *
+  qc    Quebec                  6%      7.5%    *
+  sk    Saskatchewan            6%      7%
+  yt    Yukon Territory         6%      N/A
   
   * In Quebec and Prince Edward Island only, the GST is included in the
     provincial sales tax base. You are also charged PST on GST.  
@@ -170,8 +170,6 @@ Andy Grundman, E<lt>andy@hybridized.orgE<gt>.
 This module was heavily inspired by Tony Bowden's Business::Tax::VAT.
 
 =head1 COPYRIGHT
-
-Copyright (C) 2004 Andy Grundman. All rights reserved.
 
 This module is free software; you can redistribute it and/or modify it
 under the same terms as Perl itself.
