@@ -1,7 +1,8 @@
+Build.PL
 Changes
-Makefile.PL
-MANIFEST
-README
-t/Business-Tax-Canada.t
 lib/Business/Tax/Canada.pm
-META.yml                                 Module meta-data (added by MakeMaker)
+MANIFEST			This list of files
+t/Business-Tax-Canada.t
+README
+META.yml
+META.json

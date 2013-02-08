@@ -5,7 +5,7 @@ use warnings;
 use Carp;
 
 use vars qw/$VERSION @provinces/;
-$VERSION = '0.03';
+$VERSION = '0.04';
 @provinces = qw/ab bc mb nb nf nt ns nu on pe qc sk yt/;
 
 =head1 NAME
@@ -22,8 +22,8 @@ Business::Tax::Canada - perform Canadian GST/HST/PST calculations
                                 from  => 'ab',
                                 to    => 'ab'
                                 price => 120);
-  my $price_to_customer   = $price->full;     # 127.20
-  my $gst_charged         = $price->gst;      # 7.20
+  my $price_to_customer   = $price->full;     # 126.00
+  my $gst_charged         = $price->gst;      # 6.00
   my $pst_charged         = $price->pst;      # 0
   my $net_charged         = $price->net;      # 120
   
@@ -53,16 +53,16 @@ package Business::Tax::Canada::Price;
 
 use vars qw/%GST_RATE %PST_RATE/;
 %GST_RATE = (
-    ab => 6,    bc => 6,    mb => 6,    nb => 14,
-    nf => 14,   nt => 6,    ns => 14,   nu => 6,
-    on => 6,    pe => 6,    qc => 6,    sk => 6,
-    yt => 6,
+    ab => 5,    bc => 12,   mb => 5,    nb => 13,
+    nf => 13,   nt => 5,    ns => 15,   nu => 5,
+    on => 13,   pe => 5,    qc => 5,    sk => 5,
+    yt => 5,
 );
 
 %PST_RATE = (
-    ab => 0,    bc => 7,    mb => 7,    nb => 0,
-    nf => 0,    nt => 0,    ns => 0,    nu => 0,
-    on => 8,    pe => 10,   qc => 7.5,  sk => 7,
+    ab => 0,    bc => 0,    mb => 7,     nb => 0,
+    nf => 0,    nt => 0,    ns => 0,     nu => 0,
+    on => 0,    pe => 10,   qc => 9.975, sk => 5,
     yt => 0,
 );
 
@@ -77,8 +77,8 @@ sub new {
     $self->{gst}  = $self->{net} * $gst_rate;
     $self->{pst} = 0;
     $self->{pst}  = $self->{net} * $pst_rate if (lc $province_from eq lc $province_to);
-    if (lc $province_from =~ /pe|qc/ || $province_to =~ /pe|qc/) {
-        # PEI and Quebec charge PST tax on the GST tax amount
+    if (lc $province_from =~ /pe/ || $province_to =~ /pe/) {
+        # PEI charges PST tax on the GST tax amount
         $self->{pst} = ($self->{net} + $self->{gst}) * $pst_rate if (lc $province_from eq lc $province_to);
     }
     $self->{full} = $self->{net} + $self->{gst} + $self->{pst};
@@ -135,25 +135,24 @@ method.
 
 =head1 PROVINCES AND RATES
 
-This module uses the following rates and codes obtained from
-http://www.cbsc.org/servlet/ContentServer?pagename=CBSC_AB/display&c=Regs&cid=1081944192301&lang=en
+This module uses the following rates and codes:
 
   Code  Province                GST/HST PST
-  ab    Alberta                 6%      N/A
-  bc    British Columbia        6%      7%
-  mb    Manitoba                6%      7%
-  nb    New Brunswick           14%     N/A
-  nf    Newfoundland & Labrador 14%     N/A
-  nt    Northwest Territories   6%      N/A
-  ns    Nova Scotia             14%     N/A
-  nu    Nunavut                 6%      N/A
-  on    Ontario                 6%      8%
-  pe    Prince Edward Island    6%      10%     *
-  qc    Quebec                  6%      7.5%    *
-  sk    Saskatchewan            6%      7%
-  yt    Yukon Territory         6%      N/A
+  ab    Alberta                 5%      N/A
+  bc    British Columbia        12%     N/A
+  mb    Manitoba                5%      7%
+  nb    New Brunswick           13%     N/A
+  nf    Newfoundland & Labrador 13%     N/A
+  nt    Northwest Territories   5%      N/A
+  ns    Nova Scotia             15%     N/A
+  nu    Nunavut                 5%      N/A
+  on    Ontario                 13%     N/A
+  pe    Prince Edward Island    5%      10%     *
+  qc    Quebec                  5%      9.975%
+  sk    Saskatchewan            5%      5%
+  yt    Yukon Territory         5%      N/A
   
-  * In Quebec and Prince Edward Island only, the GST is included in the
+  * In Prince Edward Island only, the GST is included in the
     provincial sales tax base. You are also charged PST on GST.  
 
 =head1 FEEDBACK
@@ -163,7 +162,7 @@ improvements, please let me know.  Patches are welcome!
 
 =head1 AUTHOR
 
-Andy Grundman, E<lt>andy@hybridized.orgE<gt>.
+Created by Andy Grundman.  Updated and maintained by Steve Simms.
 
 =head1 THANKS
 
